@@ -11,18 +11,29 @@ public class Room{
     private HashMap<String, Room> exits;
     private HashMap<String, Item> inventory;
     
+    private boolean hasEnemy; 
+    
     public Room(String name, String shortDescription, String longDescription, int ID) {
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.ID = ID;
         exits = new HashMap<>();
         inventory = new HashMap<>();
+        
+        hasEnemy = false; 
     }
     
     public Player getNpc() {
         return npc;             
     }
     
+    public boolean getEnemy() {
+    	return hasEnemy; 
+    }
+    
+    public void setEnemy(boolean value) {
+    	hasEnemy = value; 
+    }
     
     public void removeNpc() {
         npc = null;

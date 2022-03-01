@@ -2,7 +2,12 @@ package textadventure.game;
 
 import java.util.Random;
 
-//Inspect room does not work. Fix later
+//WHAT TO DO:
+//Inspect room does not work. Fix later possibly because they are different types
+//Impostor does not work. I believe that it is because currentRoom and npcCurrentRoom are different types
+//Help method
+//Task method
+
 public class Game {
   private Parser parser;
   private Room currentRoom;
@@ -16,6 +21,7 @@ public class Game {
   private Room reactor;
   private Room storage;
   private boolean inRoom = false;
+  private Room npcNextRoom; 
   
   public Game() {
       parser = new Parser();
@@ -37,11 +43,11 @@ public class Game {
   }
   
   public void setupGame() {
-      Room cafeteria = new Room( "cafeteria" ,scafeteria , "Long description of the cafeteria", 0);  
-      Room launchpad = new Room( "launchpad",slaunchpad , "Long description of the launchpad", 1); 
-      Room greenhouse = new Room( "greenhouse", sgreenhouse , "Long description of the greenhouse", 2);
-      Room reactor = new Room( "reactor" , sreactor , "Long description of the reactor", 3);
-      Room storage = new Room( "storage" , sstorage , "Long description of the storage",4);
+      cafeteria = new Room( "cafeteria" , scafeteria , lcafeteria, 0);  
+      launchpad = new Room( "launchpad", slaunchpad , llaunchpad, 1); 
+      greenhouse = new Room( "greenhouse", sgreenhouse , lgreenhouse, 2);
+      reactor = new Room( "reactor" , sreactor , lreactor, 3);
+      storage = new Room( "storage" , sstorage , lstorage,4);
       
       cafeteria.setExit("launchpad", launchpad);
       cafeteria.setExit("greenhouse", greenhouse);
@@ -53,19 +59,20 @@ public class Game {
       greenhouse.setExit("cafeteria",cafeteria);
       reactor.setExit("cafeteria",cafeteria);
       
-      Item keycard = new Item("name of item", "long description");
+      Item note = new Item("note", "To do list: Clean storage, greenhouse, and cafeteria.");
       Item itemExample2 = new Item("name of item", "long description");
       Item itemExample3 = new Item("name of item", "long description");
       Item itemExample4 = new Item("name of item", "long description");
       
-      player.setItem("keycard", keycard);
+      player.setItem("note", note);
       storage.setItem("example", itemExample2);
       greenhouse.setItem("example", itemExample3);
       reactor.setItem("example", itemExample4);
       
       
       currentRoom = cafeteria;
-      npcRoom = launchpad;
+      npcNextRoom = launchpad;
+      npcNextRoom.setEnemy(false);
       try {
               cls_var.main(); 
               }catch(Exception e) {
@@ -166,12 +173,16 @@ public class Game {
   }
   
   public void goRoom(Command command) {
+	  // check if there is line()
+	  
+	
       String direction = command.getSecondWord();
       Room nextRoom = currentRoom.getExit(direction);
       Room[] roomList = {cafeteria, launchpad, reactor, greenhouse, storage};
       Random rand = new Random();
       int n = rand.nextInt(5);
-      Room npcNextRoom = roomList[n];
+      
+       npcNextRoom =  roomList[n];
       if(!command.hasSecondWord()){
           System.out.println("Where do you want to go?");
           return;
@@ -181,28 +192,29 @@ public class Game {
           return;
       }
       else{
+    	  npcNextRoom.setEnemy(false);
           currentRoom = nextRoom;
           npcRoom = npcNextRoom;
-          if(currentRoom == npcRoom){
-              inRoom = true;   
+          npcRoom.setEnemy(true);
+                   
+          if(currentRoom.equals(npcRoom) ){        
               System.out.println("There is someone in this room"); 
           }
           else{
-              inRoom = false;
               System.out.println("There is no one else in this room");    
           }
       }
   }
   
-  private String scafeteria =  "You enter a typical cafeteria";
-  private String lcafeteria;
+  private String scafeteria =  "It's a typical cafeteria";
+  private String lcafeteria = "Upon further inspection, there are trash on the tables that could be cleaned up.";
   private String sreactor = "You enter the reactor.";
-  private String lreactor;
+  private String lreactor = "Upon further inspection, there are some wires that could be fixed in the fuse box";
   private String sgreenhouse = "You enter the greenhouse";
-  private String lgreenhouse;
+  private String lgreenhouse = "Upon further inspection, there are trash bags next that could be thrown in the trash chute next to them";
   private String slaunchpad= "You enter the launch pad";
-  private String llaunchpad;
+  private String llaunchpad = "There is a rocket to leave the facility, but you need the launch password";
   private String sstorage = "You enter the storage room";
-  private String lstorage;
+  private String lstorage = "Upon further inspection, there is a messy room that could be organized";
   
 }
