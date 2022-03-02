@@ -4,8 +4,7 @@ import java.util.Random;
 
 //WHAT TO DO:
 //Inspect room does not work. Fix later possibly because they are different types
-//Impostor does not work. I believe that it is because currentRoom and npcCurrentRoom are different types
-//Help method
+//Impostor move but work on the task
 //Task method
 
 public class Game {
@@ -110,7 +109,34 @@ public class Game {
           case"inspect" :
               inspect(command);
           break;
+          case"help" :
+        	  help(command);
+          break;
       }
+  }
+  
+  public void help(Command command) {
+	  if(!command.hasSecondWord()){
+          System.out.println("Possible commands are: go, grab, drop, inspect, and help");
+          System.out.println("Input help (command) to recieve more specific help");
+          return;
+      }
+	  else {
+		 switch(command.getSecondWord()) {
+	  	case"go":
+	  		System.out.println("Input 'go' and one of the exits to go to that room");
+	   break;
+	  	case"grab":
+	  		System.out.println("Input 'grab' and one of the items in the room to grap the item ");
+      break;
+	  	case"drop":
+	  		System.out.println("Input 'drop' and one of the items in your inventory to drop the item in the room");
+      break;
+	  	case"inspect" :
+	  		System.out.println("Input 'inspect' and an item/room to get additional information about it");
+      break; 
+		}
+	 }
   }
 
   public void inspect(Command command){
