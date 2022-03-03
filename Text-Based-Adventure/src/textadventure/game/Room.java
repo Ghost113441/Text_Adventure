@@ -14,6 +14,7 @@ public class Room{
     private boolean hasEnemy; 
     
     public Room(String name, String shortDescription, String longDescription, int ID) {
+    	this.name = name;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
         this.ID = ID;

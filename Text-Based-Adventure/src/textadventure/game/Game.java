@@ -3,9 +3,11 @@ package textadventure.game;
 import java.util.Random;
 
 //WHAT TO DO:
-//Inspect room does not work. Fix later possibly because they are different types
-//Impostor move but work on the task
-//Task method
+//Task method if else that checks if you are in the correct room with correct item for the specific task
+//Item's names and descriptions
+
+//What I COULD DO:
+//More NPCs
 
 public class Game {
   private Parser parser;
@@ -13,19 +15,17 @@ public class Game {
   private Room npcRoom;
   private Player player;
   private CLS cls_var;
-  private Player impostor;
   private Room cafeteria;
   private Room launchpad;
   private Room greenhouse;
   private Room reactor;
   private Room storage;
-  private boolean inRoom = false;
   private Room npcNextRoom; 
+  private int alive = 1;
   
   public Game() {
       parser = new Parser();
       player = new Player();
-      impostor = new Player();
   }
   
   public static void main(String[] args) {
@@ -73,7 +73,7 @@ public class Game {
       npcNextRoom = launchpad;
       npcNextRoom.setEnemy(false);
       try {
-              cls_var.main(); 
+              //cls_var.main(); 
               }catch(Exception e) {
               System.out.println(e); 
       }
@@ -82,15 +82,18 @@ public class Game {
   }
   
   public void play() {
-      while(true) {            
+      while(true && alive == 1) {            
           Command command = parser.getCommand(); 
           try {
-              cls_var.main(); 
+              //cls_var.main(); 
               }catch(Exception e) {
               System.out.println(e); 
           }
           processCommand(command);
-          printInformation();   
+          if(alive > 0) {
+        	  printInformation();
+          }
+           
       }
   }
   
@@ -112,12 +115,32 @@ public class Game {
           case"help" :
         	  help(command);
           break;
+          case"task" :
+        	  task(command);
+          break;
       }
+  }
+  
+  public void task(Command command) {
+	  // if currentRoom == "whateverRoomName" && player.getItem("note") != null 
+	  // // do something
+	  // // Item newItem = create an item 
+	  // // player.setItem("this key", newItem)
+	  
+	  
+	  
+	  
+	  if(currentRoom.equals(npcRoom)) {
+		  System.out.println("You have died");
+		  alive = 0;
+
+		  
+	  }
   }
   
   public void help(Command command) {
 	  if(!command.hasSecondWord()){
-          System.out.println("Possible commands are: go, grab, drop, inspect, and help");
+          System.out.println("Possible commands are: go, grab, drop, inspect, task, and help");
           System.out.println("Input help (command) to recieve more specific help");
           return;
       }
@@ -134,7 +157,10 @@ public class Game {
       break;
 	  	case"inspect" :
 	  		System.out.println("Input 'inspect' and an item/room to get additional information about it");
-      break; 
+      break;
+	  	case"task" :
+	  		System.out.println("lmao");
+	  break;
 		}
 	 }
   }
@@ -142,7 +168,6 @@ public class Game {
   public void inspect(Command command){
       String printString = "";
       String thingToInspect = command.getSecondWord();
-      
       if(!command.hasSecondWord()){
           System.out.println("What do you want to inspect?");
           return;
@@ -206,7 +231,7 @@ public class Game {
       Room nextRoom = currentRoom.getExit(direction);
       Room[] roomList = {cafeteria, launchpad, reactor, greenhouse, storage};
       Random rand = new Random();
-      int n = rand.nextInt(5);
+      int n = rand.nextInt(2);
       
        npcNextRoom =  roomList[n];
       if(!command.hasSecondWord()){
