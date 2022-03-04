@@ -2,10 +2,6 @@ package textadventure.game;
 
 import java.util.Random;
 
-//WHAT TO DO:
-//Task method if else that checks if you are in the correct room with correct item for the specific task
-//Item's names and descriptions
-
 //What I COULD DO:
 //More NPCs
 
@@ -58,16 +54,9 @@ public class Game {
       greenhouse.setExit("cafeteria",cafeteria);
       reactor.setExit("cafeteria",cafeteria);
       
-      Item note = new Item("note", "To do list: Clean storage, greenhouse, and cafeteria.");
-      Item itemExample2 = new Item("name of item", "long description");
-      Item itemExample3 = new Item("name of item", "long description");
-      Item itemExample4 = new Item("name of item", "long description");
-      
+      Item note = new Item("note", "To do list: Clean the cafeteria.");
       player.setItem("note", note);
-      storage.setItem("example", itemExample2);
-      greenhouse.setItem("example", itemExample3);
-      reactor.setItem("example", itemExample4);
-      
+
       
       currentRoom = cafeteria;
       npcNextRoom = launchpad;
@@ -122,20 +111,40 @@ public class Game {
   }
   
   public void task(Command command) {
-	  // if currentRoom == "whateverRoomName" && player.getItem("note") != null 
-	  // // do something
-	  // // Item newItem = create an item 
-	  // // player.setItem("this key", newItem)
-	  
-	  
-	  
 	  
 	  if(currentRoom.equals(npcRoom)) {
 		  System.out.println("You have died");
 		  alive = 0;
-
-		  
 	  }
+	  if(currentRoom == cafeteria && player.getItem("note") != null) {
+		  System.out.println("After cleaning the trash on the table, you read the next task on the note.");
+		  Item note2 = new Item("note2", "To do list: Clean the greenhouse.");
+		  player.setItem("note2", note2);
+		  player.removeItem("note");
+	  } 
+	  if(currentRoom == greenhouse && player.getItem("note2") != null) {
+		  System.out.println("After putting the trashbags in the trash chute, you notice a keycard on the ground and pick it up. ");
+		  Item keycard = new Item("keycard", "The card is labeled with the name 'storage'");
+		  player.setItem("keycard", keycard);
+		  player.removeItem("note2");
+	  } 
+	  if(currentRoom == storage && player.getItem("keycard") != null) {
+		  System.out.println("When you enter the storage room, you notice a dead body in the room. While you were still in shock, the power went out. There is a murderer on the loose, you need to fix the power and get out of the area");
+		  Item wrench = new Item("wrench", "This tool would be useful in repairing equipment");
+		  player.setItem("wrench", wrench);
+		  player.removeItem("keycard");
+	  } 
+	  if(currentRoom == reactor && player.getItem("wrench") != null) {
+		  System.out.println("You use the wrench to fix the power. You head to your ship to escape");
+		  Item keys = new Item("keys", "keys to your personal spaceship");
+		  player.setItem("keys", keys);
+		  player.removeItem("wrench");
+	  } 
+	  if(currentRoom == launchpad && player.getItem("keys") != null) {
+		  player.removeItem("wrench");
+		  alive = 0;
+		  System.out.println("You escape the murderer in your ship and report it to the space police. You win.");
+	  } 
   }
   
   public void help(Command command) {
@@ -159,7 +168,7 @@ public class Game {
 	  		System.out.println("Input 'inspect' and an item/room to get additional information about it");
       break;
 	  	case"task" :
-	  		System.out.println("lmao");
+	  		System.out.println("Input task in the correct room with the correct item in your inventory to continue with the story");
 	  break;
 		}
 	 }
@@ -231,7 +240,7 @@ public class Game {
       Room nextRoom = currentRoom.getExit(direction);
       Room[] roomList = {cafeteria, launchpad, reactor, greenhouse, storage};
       Random rand = new Random();
-      int n = rand.nextInt(2);
+      int n = rand.nextInt(5);
       
        npcNextRoom =  roomList[n];
       if(!command.hasSecondWord()){
