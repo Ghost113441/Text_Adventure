@@ -2,21 +2,21 @@ package textadventure.game;
 
 import java.util.Random;
 
-//What I COULD DO:
-//More NPCs
-
 public class Game {
   private Parser parser;
   private Room currentRoom;
-  private Room npcRoom;
+  private Room npcRoom1;
+  private Room npcRoom2;
+  private Room npcRoom3;
   private Player player;
-  private CLS cls_var;
   private Room cafeteria;
   private Room launchpad;
   private Room greenhouse;
   private Room reactor;
   private Room storage;
-  private Room npcNextRoom; 
+  private Room npcNextRoom1;
+  private Room npcNextRoom2;
+  private Room npcNextRoom3;
   private int alive = 1;
   
   public Game() {
@@ -38,11 +38,11 @@ public class Game {
   }
   
   public void setupGame() {
-      cafeteria = new Room( "cafeteria" , scafeteria , lcafeteria, 0);  
-      launchpad = new Room( "launchpad", slaunchpad , llaunchpad, 1); 
-      greenhouse = new Room( "greenhouse", sgreenhouse , lgreenhouse, 2);
-      reactor = new Room( "reactor" , sreactor , lreactor, 3);
-      storage = new Room( "storage" , sstorage , lstorage,4);
+      cafeteria = new Room( "cafeteria" , scafeteria , lcafeteria);  
+      launchpad = new Room( "launchpad", slaunchpad , llaunchpad); 
+      greenhouse = new Room( "greenhouse", sgreenhouse , lgreenhouse);
+      reactor = new Room( "reactor" , sreactor , lreactor);
+      storage = new Room( "storage" , sstorage , lstorage);
       
       cafeteria.setExit("launchpad", launchpad);
       cafeteria.setExit("greenhouse", greenhouse);
@@ -59,8 +59,13 @@ public class Game {
 
       
       currentRoom = cafeteria;
-      npcNextRoom = launchpad;
-      npcNextRoom.setEnemy(false);
+      
+      npcNextRoom1 = launchpad;
+      npcNextRoom1.setEnemy(false);
+      npcNextRoom2 = greenhouse;
+      npcNextRoom2.setEnemy(false);
+      npcNextRoom3 = reactor;
+      npcNextRoom3.setEnemy(false);
       try {
               //cls_var.main(); 
               }catch(Exception e) {
@@ -111,8 +116,7 @@ public class Game {
   }
   
   public void task(Command command) {
-	  
-	  if(currentRoom.equals(npcRoom)) {
+	  if(currentRoom.equals(npcRoom1)) {
 		  System.out.println("You have died");
 		  alive = 0;
 	  }
@@ -233,16 +237,19 @@ public class Game {
   }
   
   public void goRoom(Command command) {
-	  // check if there is line()
-	  
-	
       String direction = command.getSecondWord();
       Room nextRoom = currentRoom.getExit(direction);
       Room[] roomList = {cafeteria, launchpad, reactor, greenhouse, storage};
-      Random rand = new Random();
-      int n = rand.nextInt(5);
+      Random rand1 = new Random();
+      Random rand2 = new Random();
+      Random rand3 = new Random();
+      int npc1 = rand1.nextInt(5);
+      int npc2 = rand2.nextInt(5);
+      int npc3 = rand3.nextInt(5);
+      npcNextRoom1 =  roomList[npc1];
+      npcNextRoom2 = roomList[npc2];
+      npcNextRoom2 = roomList[npc3];
       
-       npcNextRoom =  roomList[n];
       if(!command.hasSecondWord()){
           System.out.println("Where do you want to go?");
           return;
@@ -252,19 +259,48 @@ public class Game {
           return;
       }
       else{
-    	  npcNextRoom.setEnemy(false);
+    	  npcNextRoom1.setEnemy(false);
+    	  npcNextRoom2.setEnemy(false);
+    	  npcNextRoom3.setEnemy(false);
           currentRoom = nextRoom;
-          npcRoom = npcNextRoom;
-          npcRoom.setEnemy(true);
-                   
-          if(currentRoom.equals(npcRoom) ){        
-              System.out.println("There is someone in this room"); 
+          npcRoom1 = npcNextRoom1;
+          npcRoom2 = npcNextRoom2; 
+          npcRoom3 = npcNextRoom3; 
+          npcRoom1.setEnemy(true);
+          npcRoom2.setEnemy(true);
+          npcRoom3.setEnemy(true);
+          
+          if(currentRoom.equals(npcRoom1) ){        
+              System.out.println("Blue is in this room"); 
+          }
+          else if(currentRoom.equals(npcRoom2) ){        
+              System.out.println("Red is in this room"); 
+          }
+          else if(currentRoom.equals(npcRoom3) ){        
+              System.out.println("Green is in this room"); 
+          }
+          else if(currentRoom.equals(npcRoom1) && currentRoom.equals(npcRoom2)) {        
+              System.out.println("Blue and Red are in this room"); 
+          }
+          else if(currentRoom.equals(npcRoom1) && currentRoom.equals(npcRoom3)) {        
+              System.out.println("Blue and Green are in this room"); 
+          }
+          else if(currentRoom.equals(npcRoom2) && currentRoom.equals(npcRoom3)) {        
+              System.out.println("Red and Green are in this room"); 
+          }
+          else if(currentRoom.equals(npcRoom1) && currentRoom.equals(npcRoom2) && currentRoom.equals(npcRoom3)) {        
+              System.out.println("Blue, Red, and Green are in this room"); 
           }
           else{
               System.out.println("There is no one else in this room");    
           }
       }
+    	  
+     
   }
+  
+  
+  
   
   private String scafeteria =  "It's a typical cafeteria";
   private String lcafeteria = "Upon further inspection, there are trash on the tables that could be cleaned up.";

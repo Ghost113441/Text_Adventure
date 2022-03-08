@@ -13,11 +13,10 @@ public class Room{
     
     private boolean hasEnemy; 
     
-    public Room(String name, String shortDescription, String longDescription, int ID) {
+    public Room(String name, String shortDescription, String longDescription) {
     	this.name = name;
         this.shortDescription = shortDescription;
         this.longDescription = longDescription;
-        this.ID = ID;
         exits = new HashMap<>();
         inventory = new HashMap<>();
         
